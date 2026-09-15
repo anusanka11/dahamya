@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O/L 2026 Study Timetable</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#fff; --text:#14213d; --muted:#65728a;
+  --primary:#1769e0; --secondary:#6c3ce8; --border:#e4e9f2;
+  --soft:#eef5ff; --success:#12a875; --shadow:0 12px 35px rgba(31,49,85,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:linear-gradient(135deg,#eef5ff,#f8f4ff);color:var(--text)}
+.container{max-width:1180px;margin:auto;padding:28px 18px 50px}
+.hero{background:linear-gradient(135deg,#1769e0,#6c3ce8);color:#fff;border-radius:28px;padding:34px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.10);right:-80px;top:-100px}
+.hero h1{margin:0 0 8px;font-size:clamp(28px,4vw,46px)}
+.hero p{margin:0;opacity:.9;font-size:16px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;position:relative;z-index:2}
+button{border:0;border-radius:12px;padding:11px 15px;font-weight:700;cursor:pointer}
+.btn-light{background:#fff;color:#2450a9}.btn-ghost{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 12px;font-size:19px}.muted{color:var(--muted)}
+.stat{font-size:30px;font-weight:800}.progress{height:10px;background:#e9edf4;border-radius:99px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));width:0%}
+.section{margin-top:28px}.section-title{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:12px}
+.section-title h2{margin:0;font-size:25px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+th,td{padding:14px;border-bottom:1px solid var(--border);vertical-align:top;text-align:left}
+th{background:var(--soft);font-size:14px}td{font-size:14px}
+.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#eef5ff;color:#195abb;font-weight:700;font-size:12px}
+.day-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.day{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.day h3{margin:0 0 10px}.subject{font-weight:800;color:#2450a9}.task{margin:7px 0;color:#39465d}
+.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+label.check{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--border);border-radius:13px;background:#fff}
+input[type=checkbox]{accent-color:var(--primary);width:18px;height:18px;margin-top:2px}
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stage{border:1px solid var(--border);border-radius:16px;padding:16px;background:#fff}
+.stage strong{display:block;margin-bottom:6px}
+footer{text-align:center;color:var(--muted);padding-top:30px}
+@media(max-width:850px){.grid,.stages{grid-template-columns:1fr 1fr}.day-grid,.checklist{grid-template-columns:1fr}}
+@media(max-width:580px){.container{padding:16px 12px 40px}.hero{padding:24px;border-radius:22px}.grid,.stages{grid-template-columns:1fr}th,td{padding:10px}.table-wrap{overflow:auto}table{min-width:720px}}
+body.dark{--bg:#0c1220;--card:#121a2b;--text:#eef3ff;--muted:#9aa9c2;--border:#253148;--soft:#182744;background:#0c1220}
+body.dark .card,body.dark .day,body.dark table,body.dark .stage,body.dark label.check{background:var(--card)}
+body.dark .progress{background:#263249}
+</style>
+</head>
+<body>
+<div class="container">
+<section class="hero">
+  <h1>📚 O/L 2026 අධ්‍යයන සැලැස්ම</h1>
+  <p>ශ්‍රී ලංකා G.C.E. සාමාන්‍ය පෙළ — පාසල් වේලාවෙන් පසු ඔබේ පුද්ගලික daily + weekly timetable</p>
+  <div class="actions">
+    <button class="btn-light" onclick="window.print()">🖨️ Print / PDF</button>
+    <button class="btn-ghost" onclick="toggleDark()">🌙 Dark / Light</button>
+    <button class="btn-ghost" onclick="resetProgress()">↺ Reset Progress</button>
+  </div>
+</section>
+
+<div class="grid">
+  <div class="card"><div class="muted">සතියේ විෂයන්</div><div class="stat">9</div><div class="muted">සිංහල • ඉංග්‍රීසි • ගණිතය • විද්‍යාව • ඉතිහාසය • බුද්ධ ධර්මය • වාණිජ්‍යය • සංගීතය • සෞඛ්‍යය</div></div>
+  <div class="card"><div class="muted">Weekday study window</div><div class="stat">7 PM – 12 AM</div><div class="muted">විවේක සහ රාත්‍රී ආහාරය ඇතුළත්</div></div>
+  <div class="card"><div class="muted">Weekly progress</div><div class="stat" id="pct">0%</div><div class="progress"><div id="bar"></div></div></div>
+</div>
+
+<section class="section">
+  <div class="section-title"><h2>🕐 දෛනික කාලසටහන</h2><span class="badge">සඳුදා – සිකුරාදා</span></div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>වේලාව</th><th>කාර්යය</th><th>කළ යුතු දේ</th></tr></thead>
+    <tbody>
+      <tr><td>7:00 – 7:15</td><td>පාසල් පාඩම් නැවත මතක් කිරීම</td><td>අද පාසලේ ඉගෙනගත් කරුණු කෙටියෙන් review කරන්න.</td></tr>
+      <tr><td>7:15 – 8:15</td><td>ප්‍රධාන විෂය — නව පාඩම</td><td>අලුත් පාඩමක් ඉගෙනගෙන කෙටි සටහන් සකස් කරන්න.</td></tr>
+      <tr><td>8:15 – 8:30</td><td>☕ විවේකය</td><td>Snack / stretch / screen break.</td></tr>
+      <tr><td>8:30 – 9:30</td><td>Practice</td><td>අභ්‍යාස, ගණනය කිරීම්, structured questions හෝ past-paper questions.</td></tr>
+      <tr><td>9:30 – 10:00</td><td>🍽️ රාත්‍රී ආහාරය</td><td>පාඩම් වලින් සම්පූර්ණ විවේකයක්.</td></tr>
+      <tr><td>10:00 – 11:00</td><td>දෙවන විෂය — Revision</td><td>පැරණි පාඩම්, flash notes, definitions, dates හෝ vocabulary.</td></tr>
+      <tr><td>11:00 – 11:10</td><td>කෙටි විවේකය</td><td>ජලය බොන්න, ඇස් සහ මනස relax කරන්න.</td></tr>
+      <tr><td>11:10 – 11:45</td><td>Timed exam practice</td><td>කෙටි quiz / timed questions / මතකයෙන් පිළිතුරු ලිවීම.</td></tr>
+      <tr><td>11:45 – 12:00</td><td>Daily review</td><td>අද කළ දේ check කර හෙටට සූදානම් වන්න.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>📅 සතිපතා විෂය Rotation</h2><span class="badge">Repeat weekly</span></div>
+  <div class="day-grid">
+    <div class="day"><h3>සඳුදා</h3><div class="subject">ගණිතය + සිංහල</div><div class="task">ගණිතය: නව පාඩම + problems</div><div class="task">සිංහල: ව්‍යාකරණ / සාහිත්‍ය / රචනා</div></div>
+    <div class="day"><h3>අඟහරුවාදා</h3><div class="subject">විද්‍යාව + ඉංග්‍රීසි</div><div class="task">විද්‍යාව: theory + diagrams + questions</div><div class="task">ඉංග්‍රීසි: grammar / comprehension / writing</div></div>
+    <div class="day"><h3>බදාදා</h3><div class="subject">ඉතිහාසය + බුද්ධ ධර්මය</div><div class="task">ඉතිහාසය: dates / events / timelines</div><div class="task">බුද්ධ ධර්මය: teachings + structured answers</div></div>
+    <div class="day"><h3>බ්‍රහස්පතින්දා</h3><div class="subject">ගණිතය + වාණිජ්‍යය</div><div class="task">ගණිතය: difficult problems + correction</div><div class="task">වාණිජ්‍යය: theory + calculations</div></div>
+    <div class="day"><h3>සිකුරාදා</h3><div class="subject">විද්‍යාව + සංගීතය / සෞඛ්‍යය</div><div class="task">විද්‍යාව: past questions</div><div class="task">Week A: සංගීතය • Week B: සෞඛ්‍යය ලෙස alternate කරන්න.</div></div>
+    <div class="day"><h3>සෙනසුරාදා</h3><div class="subject">Past Papers + Weak Areas</div><div class="task">4–5 පැය තුළ timed paper / question sets, ඉන්පසු වැරදි review.</div></div>
+    <div class="day"><h3>ඉරිදා</h3><div class="subject">Weekly Revision + Catch-up</div><div class="task">සතියේ සියලු පාඩම් review කර ඊළඟ සතිය සැලසුම් කරන්න.</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>🎯 සතිපතා Progress Tracker</h2><span class="muted">සම්පූර්ණ කළ දේ tick කරන්න</span></div>
+  <div class="checklist" id="checks">
+    <label class="check"><input type="checkbox"> මේ සතියේ ගණිතය sessions සම්පූර්ණ කළා</label>
+    <label class="check"><input type="checkbox"> විද්‍යා practice completed</label>
+    <label class="check"><input type="checkbox"> සිංහල writing / grammar practice කළා</label>
+    <label class="check"><input type="checkbox"> ඉංග්‍රීසි grammar / comprehension කළා</label>
+    <label class="check"><input type="checkbox"> ඉතිහාසය + timeline revision කළා</label>
+    <label class="check"><input type="checkbox"> බුද්ධ ධර්මය revision කළා</label>
+    <label class="check"><input type="checkbox"> වාණිජ්‍යය questions කළා</label>
+    <label class="check"><input type="checkbox"> සංගීතය / සෞඛ්‍යය කළා</label>
+    <label class="check"><input type="checkbox"> Past paper / timed questions completed</label>
+    <label class="check"><input type="checkbox"> “මගේ වැරදි” පොත review කළා</label>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title"><h2>🚀 O/L සූදානම් වීමේ අදියර</h2></div>
+  <div class="stages">
+    <div class="stage"><strong>01 — මූලික දැනුම</strong><span class="muted">අවසන් නොකළ පාඩම් සම්පූර්ණ කර basics ශක්තිමත් කරන්න.</span></div>
+    <div class="stage"><strong>02 — Syllabus Finish</strong><span class="muted">සියලු lessons cover කර chapter questions කරන්න.</span></div>
+    <div class="stage"><strong>03 — Past Papers</strong><span class="muted">Timed papers කරන්න, marks සහ mistakes track කරන්න.</span></div>
+    <div class="stage"><strong>04 — Final Revision</strong><span class="muted">Short notes, formulas, dates, definitions සහ mistakes revise කරන්න.</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="card">
+    <h2>💡 ඔබට උපකාරී නීති 6ක්</h2>
+    <p>01. ගණිතය සහ විද්‍යාව — සතියකට කිහිප වරක් practice කරන්න.</p>
+    <p>02. භාෂා — writing, grammar සහ comprehension අනිවාර්යයෙන් පුහුණු කරන්න.</p>
+    <p>03. ඉතිහාසය / බුද්ධ ධර්මය — short notes + self-testing භාවිත කරන්න.</p>
+    <p>04. වාණිජ්‍යය — theory සහ calculations දෙකම කරන්න.</p>
+    <p>05. “මගේ වැරදි” notebook එක සතිපතා review කරන්න.</p>
+    <p>06. නින්ද සහ විවේකය නොසලකා හරින්න එපා; පාසල් දිනවල අධික වෙහෙසක් දැනේ නම් workload අඩු කරන්න.</p>
+  </div>
+</section>
+
+<footer>Made for your Sri Lankan O/L 2026 preparation • Progress is saved automatically in this browser.</footer>
+</div>
+<script>
+const boxes=[...document.querySelectorAll('#checks input[type=checkbox]')];
+function save(){localStorage.setItem('ol2026progress',JSON.stringify(boxes.map(x=>x.checked)));update();}
+function load(){try{const a=JSON.parse(localStorage.getItem('ol2026progress')||'[]');boxes.forEach((x,i)=>x.checked=!!a[i]);}catch(e){}update();}
+function update(){const n=boxes.filter(x=>x.checked).length, p=Math.round(n/boxes.length*100);document.getElementById('pct').textContent=p+'%';document.getElementById('bar').style.width=p+'%';}
+boxes.forEach(x=>x.addEventListener('change',save));
+function resetProgress(){if(confirm('සියලු progress reset කරන්නද?')){boxes.forEach(x=>x.checked=false);save();}}
+function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('olTheme',document.body.classList.contains('dark')?'dark':'light');}
+if(localStorage.getItem('olTheme')==='dark')document.body.classList.add('dark'); load();
+</script>
+</body>
+</html>
